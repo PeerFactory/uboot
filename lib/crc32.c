@@ -18,6 +18,7 @@
 #include <watchdog.h>
 #endif
 #include "u-boot/zlib.h"
+#include "asm-arm/arch-ns9xxx/ns921x_hub.h"
 
 #define local static
 #define ZEXPORT	/* empty */

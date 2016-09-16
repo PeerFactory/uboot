@@ -22,7 +22,7 @@
  */
 
 /* #define DEBUG */
-
+#include <configs/cc9p9215.h>
 #include <common.h>
 #include <flash.h>
 

@@ -29,12 +29,21 @@ DECLARE_GLOBAL_DATA_PTR;
 
 static struct serial_device *serial_devices = NULL;
 static struct serial_device *serial_current = NULL;
+#if defined(CONFIG_NS9215) || defined(CONFIG_NS9210)
+extern struct serial_device serial_ns921x_devices[4];
+#endif
 
 #if !defined(CONFIG_LWMON) && !defined(CONFIG_PXA27X)
 struct serial_device *__default_serial_console (void)
 {
 #if defined(CONFIG_8xx_CONS_SMC1) || defined(CONFIG_8xx_CONS_SMC2)
 	return &serial_smc_device;
+#elif defined(CONFIG_NS9215) || defined(CONFIG_NS9210)
+#ifdef CONFIG_NS921X_FIM_UART
+        return &fim_serial_device;
+#else
+        return &serial_ns921x_devices[ CONFIG_CONS_INDEX ];
+#endif
 #elif defined(CONFIG_8xx_CONS_SCC1) || defined(CONFIG_8xx_CONS_SCC2) \
    || defined(CONFIG_8xx_CONS_SCC3) || defined(CONFIG_8xx_CONS_SCC4)
 	return &serial_scc_device;
@@ -125,6 +134,15 @@ void serial_initialize (void)
 #if defined(CONFIG_8xx_CONS_SCC1) || defined(CONFIG_8xx_CONS_SCC2) \
  || defined(CONFIG_8xx_CONS_SCC3) || defined(CONFIG_8xx_CONS_SCC4)
 	serial_register (&serial_scc_device);
+#endif
+#if defined(CONFIG_NS9215) || defined(CONFIG_NS9210)
+#ifdef CONFIG_NS921X_FIM_UART
+        serial_register( &fim_serial_device);
+#else
+        int i;
+        for( i = 0; i < ARRAY_SIZE( serial_ns921x_devices ); i++ )
+                serial_register( &serial_ns921x_devices[ i ] );
+#endif
 #endif
 
 #if defined(CONFIG_405GP) || defined(CONFIG_405CR) || defined(CONFIG_440) \

@@ -39,8 +39,61 @@
 #define STATUS_LED_BLINKING	1
 #define STATUS_LED_ON		2
 
+#ifndef __ASSEMBLY__
 void status_led_tick (unsigned long timestamp);
 void status_led_set  (int led, int state);
+#endif
+/*****  CC9C *************************************************************/
+#ifdef CONFIG_CC9C
+
+# define STATUS_LED_BIT         67              /* (CR1) LED at GPIO67  used */
+# define STATUS_LED_PERIOD      1559812
+# define STATUS_LED_STATE       STATUS_LED_ON
+
+# define STATUS_LED_BIT1        66              /* (CR2) LED at GPIO66 used */
+# define STATUS_LED_PERIOD1     1559812
+# define STATUS_LED_STATE1      STATUS_LED_OFF
+
+# ifdef CONFIG_JSCCW9C
+#  define STATUS_LED_BIT2       48              /* CR6(GPIO48) on JumpStart */
+#  define STATUS_LED_PERIOD2    1559812
+#  define STATUS_LED_STATE2     STATUS_LED_OFF
+
+#  define STATUS_LED_BIT3       49              /* CR7(GPIO49) on JumpStart */
+#  define STATUS_LED_PERIOD3    1559812
+#  define STATUS_LED_STATE3    STATUS_LED_OFF
+# endif  /* CONFIG_JSCCW9C */
+
+# define STATUS_LED_ACTIVE      0               /* LED on for bit == 0  */
+# define STATUS_LED_BOOT        0               /* LED DEBUG used for boot status */
+
+/*****  CC9P *************************************************************/
+#elif CONFIG_JSCC9P9360
+#  define STATUS_LED_BIT        47              /* (LE8) Debug LED on JumpStart */
+#  define STATUS_LED_PERIOD     1559812
+#  define STATUS_LED_STATE      STATUS_LED_OFF
+
+#  define STATUS_LED_BIT1       46              /* (LE5) LED at GPIO46 on JumpStart */
+#  define STATUS_LED_PERIOD1    1559812
+#  define STATUS_LED_STATE1     STATUS_LED_OFF
+
+#  define STATUS_LED_BIT2       66              /* (LE6) LED at GPIO66 on JumpStart */
+#  define STATUS_LED_PERIOD2    1559812
+#  define STATUS_LED_STATE2     STATUS_LED_OFF
+
+#  define STATUS_LED_ACTIVE     0               /* LED on for bit == 0  */
+#  define STATUS_LED_BOOT       0               /* LED DEBUG used for boot status */
+
+/*****  CC9P9360 Dev
+ * *************************************************************/
+#elif defined(CONFIG_MACH_CC9P9360DEV)
+#  define STATUS_LED_BIT        47              /* (LE8) Debug LED on DevKit */
+#  define STATUS_LED_PERIOD     1559812
+#  define STATUS_LED_STATE      STATUS_LED_OFF
+
+#  define STATUS_LED_ACTIVE     0               /* LED on for bit == 0  */
+#  define STATUS_LED_BOOT       0               /* LED DEBUG used for boot status */
+#endif
 
 /*****  TQM8xxL  ********************************************************/
 #if defined(CONFIG_TQM8xxL) && !defined(CONFIG_HMI10)
@@ -345,6 +398,8 @@ void status_led_set  (int led, int state);
 /************************************************************************/
 #elif defined(CONFIG_NIOS2)
 /* XXX empty just to avoid the error */
+#elif defined(CONFIG_NS921X)
+/* XXX empty just to avoid the error */
 /************************************************************************/
 #elif defined(CONFIG_V38B)
 
@@ -380,7 +435,7 @@ extern void __led_set (led_id_t mask, int state);
 /************************************************************************/
 
 #ifndef CONFIG_BOARD_SPECIFIC_LED
-# include <asm/status_led.h>
+# include <asm-arm/status_led.h>
 #endif
 
 /*

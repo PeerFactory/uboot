@@ -38,7 +38,10 @@
  *
  **************************************************************************
  */
+#define CONFIG_ENV_SIZE 0x10000
+#define CONFIG_SYS_MAXARGS 32
 
+#include <configs/digi_common.h>
 #include <common.h>
 #include <command.h>
 #include <environment.h>
@@ -53,6 +56,7 @@
 #include <net.h>
 #endif
 
+#define CONFIG_ENV_IS_IN_FLASH	1
 DECLARE_GLOBAL_DATA_PTR;
 
 #if !defined(CONFIG_ENV_IS_IN_EEPROM)	&& \

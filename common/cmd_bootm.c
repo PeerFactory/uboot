@@ -25,6 +25,17 @@
 /*
  * Boot support
  */
+#define CONFIG_ENV_IS_IN_FLASH	1
+#define CONFIG_ENV_SIZE 0x10000
+#ifndef CONFIG_SYS_LOAD_ADDR
+#define CONFIG_SYS_LOAD_ADDR 0x100000
+#endif
+#define CONFIG_SYS_MAXARGS 32
+#define CONFIG_SYS_MAX_FLASH_BANKS 1
+#include <configs/cc9p9215.h>
+#ifdef CONFIG_CC9P9215
+#undef CONFIG_CMD_USB
+#endif
 #include <common.h>
 #include <watchdog.h>
 #include <command.h>

@@ -23,6 +23,8 @@
 
 #include <common.h>
 #include <command.h>
+#define CONFIG_SYS_MAXARGS 32
+#define CONFIG_SYS_MAX_FLASH_BANKS 1
 
 int do_help(cmd_tbl_t * cmdtp, int flag, int argc, char * const argv[])
 {

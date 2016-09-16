@@ -24,6 +24,10 @@
 /*
  * Serial up- and download support
  */
+#ifndef CONFIG_SYS_LOAD_ADDR
+#define CONFIG_SYS_LOAD_ADDR 0x100000
+#endif
+
 #include <common.h>
 #include <command.h>
 #include <s_record.h>

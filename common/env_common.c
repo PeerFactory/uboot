@@ -24,6 +24,8 @@
  * MA 02111-1307 USA
  */
 
+#define CONFIG_ENV_SIZE 0x10000
+
 #include <common.h>
 #include <command.h>
 #include <environment.h>

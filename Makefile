@@ -216,7 +216,9 @@ LIBS += drivers/mtd/spi/libspi_flash.a
 LIBS += drivers/net/libnet.a
 LIBS += drivers/net/phy/libphy.a
 LIBS += drivers/pci/libpci.a
+ifneq ($(CPU),arm926ejs)
 LIBS += drivers/pcmcia/libpcmcia.a
+endif
 LIBS += drivers/power/libpower.a
 LIBS += drivers/spi/libspi.a
 ifeq ($(CPU),mpc83xx)
@@ -2102,6 +2104,173 @@ omap730p2_cs3boot_config :	unconfig
 		echo "#define CONFIG_CS3_BOOT" >> $(obj)include/config.h ; \
 	fi;
 	@$(MKCONFIG) -n $@ -a omap730p2 arm arm926ejs omap730p2 ti omap
+
+######################################################################## 
+## Digi boards 
+cc9p9215_config \
+cc9p9215js_config \
+cc9p9215js_dbg_netos_config \
+cc9p9215js_test_config \
+cc9p9215js_test_dbg_config \
+cc9p9215js_netos_config \
+cc9p9215js_test_netos_config \
+cc9p9215js_test_dbg_netos_config \
+cc9p9215js_dbg_config :	unconfig
+	@if [ "$(findstring cc9p9215_, $@)" ] ; then \
+		echo "crc32 will be appended to u-boot-${PLATFORM_NAME}.bin"; \
+		echo "#define CFG_APPEND_CRC32" >> ./include/config.h; \
+		echo "APPEND_CRC32=y"	>>include/config.mk; \
+		echo "#define CONFIG_NS9215" >> ./include/config.h; \
+		echo "#define CONFIG_CC9C" >> ./include/config.h; \
+		echo "#undef CONFIG_CC9C_NAND" >> ./include/config.h; \
+		echo "#undef CONFIG_CMD_NAND" >> ./include/config.h; \
+		echo "#define PHYS_SDRAM_1_SIZE SZ_16M" >> ./include/config.h; \
+		echo "#undef CONFIG_STATUS_LED" >> ./include/config.h; \
+		echo "#include <configs/digi_common.h>" >> ./include/config.h; \
+		echo "Configuring with 16MB SDRAM and NOR Flash"; \
+		echo "#define CONFIG_SYS_MAXARGS CFG_MAXARGS" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_MAX_FLASH_BANKS CFG_MAX_FLASH_BANKS" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_I2C_SPEED CFG_I2C_SPEED" >> ./include/config.h; \
+		echo "#define CONFIG_ENV_SIZE CFG_ENV_SIZE" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_MEMTEST_START CFG_MEMTEST_START" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_MEMTEST_END CFG_MEMTEST_END" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_HZ CFG_HZ" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_BAUDRATE_TABLE CFG_BAUDRATE_TABLE" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_CBSIZE CFG_CBSIZE" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_PBSIZE CFG_PBSIZE" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_PROMPT CFG_PROMPT" >> ./include/config.h; \
+		echo "#undef CONFIG_CMD_USB" >> ./include/config.h; \
+		echo "#undef CONFIG_CMD_PCMCIA" >> ./include/config.h; \
+		echo "#undef CONFIG_PCI" >> ./include/config.h; \
+		echo "#undef CONFIG_CMD_PCI" >> ./include/config.h; \
+	fi;
+	@if [ "$(findstring js_, $@)" ] ; then \
+		echo "#define CONFIG_JSCC9P9215 1" >> ./include/config.h ; \
+		echo "Configuring JSCC9P9215 Development Board"; \
+	fi;
+	@if [ "$(findstring _dbg_, $@)" ] ; then \
+		echo "#define CONFIG_DOWNLOAD_BY_DEBUGGER" >> ./include/config.h ; \
+		echo "Configuring for debugger download"; \
+	fi;
+	@if [ "$(findstring _netos_, $@)" ] ; then \
+		echo "#define CONFIG_NETOS_BRINGUP" >> ./include/config.h ; \
+		echo "Configuring for NET+OS bringup"; \
+		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h ; \
+		echo "Configuring with test commands embedded"; \
+	fi;
+	@if [ "$(findstring _test_, $@)" ] ; then \
+		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h ; \
+		echo "Configuring with test commands embedded"; \
+	fi;
+#         mkconfig       _config  arch cpu       board    vendor soc
+#         -------------------------------------------------------------
+	$(MKCONFIG)   -a cc9p9215 arm  arm926ejs cc9p921x 
+
+	@echo "crc32 will be appended to u-boot-${PLATFORM_NAME}.bin";
+	@echo "#define CFG_APPEND_CRC32" >> ./include/config.h;
+	@echo "APPEND_CRC32=y"	>>include/config.mk;
+
+ccw9p9215js_config \
+ccw9p9215js_dbg_netos_config \
+ccw9p9215js_test_config \
+ccw9p9215js_test_dbg_config \
+ccw9p9215js_netos_config \
+ccw9p9215js_test_netos_config \
+ccw9p9215js_test_dbg_netos_config \
+ccw9p9215js_dbg_config :	unconfig
+	@if [ "$(findstring js_, $@)" ] ; then \
+		echo "#define CONFIG_JSCCW9P9215 1" >> ./include/config.h ; \
+		echo "Configuring JSCCW9P9215 Development Board"; \
+	fi;
+	@if [ "$(findstring _dbg_, $@)" ] ; then \
+		echo "#define CONFIG_DOWNLOAD_BY_DEBUGGER" >> ./include/config.h ; \
+		echo "Configuring for debugger download"; \
+	fi;
+	@if [ "$(findstring _netos_, $@)" ] ; then \
+		echo "#define CONFIG_NETOS_BRINGUP" >> ./include/config.h ; \
+		echo "Configuring for NET+OS bringup"; \
+		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h ; \
+		echo "Configuring with test commands embedded"; \
+	fi;
+	@if [ "$(findstring _test_, $@)" ] ; then \
+		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h ; \
+		echo "Configuring with test commands embedded"; \
+	fi;
+	@$(MKCONFIG) -a ccw9p9215 arm arm926ejs ccw9p921x NULL ns921x ns9xxx
+
+	@echo "crc32 will be appended to u-boot-${PLATFORM_NAME}.bin";
+	@echo "#define CFG_APPEND_CRC32" >> ./include/config.h;
+	@echo "APPEND_CRC32=y"	>>include/config.mk;
+
+cc9p9210js_config \
+cc9p9210js_dbg_netos_config \
+cc9p9210js_test_config \
+cc9p9210js_dbg_config :	unconfig
+	@if [ "$(findstring js_, $@)" ] ; then \
+		echo "#define CONFIG_JSCC9P9215 1" >> ./include/config.h ; \
+		echo "Configuring JSCC9P9215 Development Board"; \
+	fi;
+	@if [ "$(findstring _dbg_, $@)" ] ; then \
+		echo "#define CONFIG_DOWNLOAD_BY_DEBUGGER" >> ./include/config.h ; \
+		echo "Configuring for debugger download"; \
+	fi;
+	@if [ "$(findstring _netos_, $@)" ] ; then \
+		echo "#define CONFIG_NETOS_BRINGUP" >> ./include/config.h ; \
+		echo "Configuring for NET+OS bringup"; \
+		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h ; \
+		echo "Configuring with test commands embedded"; \
+	fi;
+	@if [ "$(findstring _test_, $@)" ] ; then \
+		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h ; \
+		echo "Configuring with test commands embedded"; \
+	fi;
+	@$(MKCONFIG) -a cc9p9210 arm arm926ejs cc9p921x NULL ns921x ns9xxx
+
+	@echo "crc32 will be appended to u-boot-${PLATFORM_NAME}.bin";
+	@echo "#define CFG_APPEND_CRC32" >> ./include/config.h;
+	@echo "APPEND_CRC32=y"	>>include/config.mk;
+
+cc9cjsnand_config \
+cc9cjsnor_config \
+cc9cjsnand_dbg_config \
+cc9cjsnand_test_config \
+cc9cjsnand_test_dbg_config \
+cc9cjsnor_dbg_config:	unconfig
+	@if [ "$(findstring jsnand_, $@)" ]; then \
+		echo "#define CONFIG_JSCCW9C 1"   >> ./include/config.h ; \
+		echo "#define CONFIG_CC9C_NAND 1" >> ./include/config.h; \
+		echo "Configuring ConnectCore 9C with NAND Flash on Development Board"; \
+	elif [ "$(findstring jsnor_, $@)" ]; then \
+		echo "#define CONFIG_JSCCW9C 1" >> ./include/config.h ; \
+		echo "#undef CONFIG_CC9C_NAND" >> ./include/config.h; \
+		echo "#define PHYS_SDRAM_1_SIZE SZ_16M" >> ./include/config.h; \
+		echo "Configuring ConnectCore 9C with 16MB SDRAM and NOR Flash on Development Board"; \
+	else \
+		echo "please specify if you have a ConnectCore 9C with NAND or NOR Flash"; \
+	fi;
+	@if [ "$(findstring _dbg_, $@)" ] ; then \
+		echo "#define CONFIG_DOWNLOAD_BY_DEBUGGER" >> ./include/config.h ; \
+		echo "Configuring for debugger download"; \
+	fi;
+	@if [ "$(findstring _test_, $@)" ] ; then \
+		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h ; \
+		echo "Configuring with test commands embedded"; \
+	fi;
+	@$(MKCONFIG) -a cc9c arm arm926ejs cc9c NULL ns9xxx
+
+cme9210js_config:	unconfig
+	@if [ "$(findstring js_, $@)" ] ; then \
+		echo "#define CONFIG_JSCME9210 1" >> ./include/config.h ; \
+		echo "Configuring CME9210JS Development Board"; \
+	fi;
+	@$(MKCONFIG) -a cme9210 arm arm926ejs cme9210 NULL ns921x ns9xxx
+	@echo "SWITCH_ENDIANESS=y" >>include/config.mk
+	@echo "crc32 will be appended to u-boot-${PLATFORM_NAME}.bin";
+	@echo "#define CFG_APPEND_CRC32" >> ./include/config.h;
+	@echo "APPEND_CRC32=y"	>>include/config.mk;
+
+#
+
 
 spear300_config \
 spear310_config \

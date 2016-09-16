@@ -561,6 +561,7 @@ LIST_ARM9="			\
 	ap926ejs		\
 	ap946es			\
 	ap966			\
+        cc9p9215_config         \
 	cp920t			\
 	cp922_XA10		\
 	cp926ejs		\

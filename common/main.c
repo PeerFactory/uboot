@@ -26,7 +26,7 @@
  */
 
 /* #define	DEBUG	*/
-
+#include <configs/digi_common.h>
 #include <common.h>
 #include <watchdog.h>
 #include <command.h>

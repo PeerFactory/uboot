@@ -40,6 +40,9 @@
 #elif defined(CONFIG_OMAP730)
 #include <./configs/omap730.h>
 #endif
+#if defined(CONFIG_JSCC9P9215)
+#include <./configs/digi_common.h>
+#endif
 
 /*
  *************************************************************************
