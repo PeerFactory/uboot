@@ -52,6 +52,8 @@
 
 #if defined(CONFIG_JSCC9P9215)
 # define PLATFORM		"js"
+#else
+#define PLATFORM "nor"
 #endif
 
 #define BOARD_LATE_INIT		1	/* Enables initializations before jumping to main loop */

@@ -29,7 +29,7 @@ DIGI_BSP = -I $(DIGI_DIR) -I $(DIGI_DIR)/cmd_nvram/ -I $(DIGI_DIR)/cmd_nvram/lib
 CFLAGS   += $(DIGI_BSP)
 CPPFLAGS += $(DIGI_BSP)
 
-OBJS	:= board.o
+OBJS	:= board.o flash.o
 SOBJS	:= platform.o
 
 $(LIB):	$(OBJS) $(SOBJS)

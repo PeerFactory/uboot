@@ -192,6 +192,10 @@ endif
 ifeq ($(CPU),ixp)
 LIBS += arch/arm/cpu/ixp/npe/libnpe.a
 endif
+ifeq ($(BOARD),cc9p921x)
+LIBS += arch/arm/cpu/arm926ejs/ns921x/libns921x.a
+LIBS += common/digi/cmd_nvram/libnvram.a
+endif
 LIBS += arch/$(ARCH)/lib/lib$(ARCH).a
 LIBS += fs/cramfs/libcramfs.a fs/fat/libfat.a fs/fdos/libfdos.a fs/jffs2/libjffs2.a \
 	fs/reiserfs/libreiserfs.a fs/ext2/libext2fs.a fs/yaffs2/libyaffs2.a \
@@ -244,6 +248,7 @@ LIBS += drivers/usb/phy/libusb_phy.a
 LIBS += drivers/video/libvideo.a
 LIBS += drivers/watchdog/libwatchdog.a
 LIBS += common/libcommon.a
+LIBS += common/digi/libdigi.a
 LIBS += lib/libfdt/libfdt.a
 LIBS += api/libapi.a
 LIBS += post/libpost.a
@@ -2162,8 +2167,9 @@ cc9p9215js_dbg_config :	unconfig
 		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h ; \
 		echo "Configuring with test commands embedded"; \
 	fi;
+#
 #         mkconfig       _config  arch cpu       board    vendor soc
-#         -------------------------------------------------------------
+#       -------------------------------------------------------------
 	$(MKCONFIG)   -a cc9p9215 arm  arm926ejs cc9p921x 
 
 	@echo "crc32 will be appended to u-boot-${PLATFORM_NAME}.bin";

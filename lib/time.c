@@ -28,6 +28,7 @@
 # define CONFIG_WD_PERIOD	(10 * 1000 * 1000)	/* 10 seconds default*/
 #endif
 
+#ifndef CONFIG_NS9215
 /* ------------------------------------------------------------------------- */
 
 void udelay(unsigned long usec)
@@ -41,3 +42,4 @@ void udelay(unsigned long usec)
 		usec -= kv;
 	} while(usec);
 }
+#endif

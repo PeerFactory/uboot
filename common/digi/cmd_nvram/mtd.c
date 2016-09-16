@@ -151,7 +151,11 @@ int MtdErase( int iChip, uint64_t ullOffs, size_t iLength )
         } /* if( !DVTIsEnabled() */
 
         if( bNeedErase )
+#ifndef CONFIG_NS9215
                 iRes = !flash_sect_erase( ulStart, ulStart + iLength - 1, 1 );
+#else
+                iRes = !flash_sect_erase( ulStart, ulStart + iLength - 1);
+#endif
         else
                 /* not necessary */
                 iRes = 1;

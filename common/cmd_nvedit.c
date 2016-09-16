@@ -38,13 +38,11 @@
  *
  **************************************************************************
  */
-#define CONFIG_ENV_SIZE 0x10000
-#define CONFIG_SYS_MAXARGS 32
 
-#include <configs/digi_common.h>
 #include <common.h>
 #include <command.h>
 #include <environment.h>
+#include <configs/digi_common.h>
 #if defined(CONFIG_CMD_EDITENV)
 #include <malloc.h>
 #endif
@@ -178,7 +176,13 @@ int do_printenv (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
  * This function will ONLY work with a in-RAM copy of the environment
  */
 
-int _do_setenv (int flag, int argc, char * const argv[])
+/* int _do_setenv (int flag, int argc, char * const argv[]) */
+#ifndef CONFIG_ENV_OVERRIDE
+int _do_setenv (int flag, int argc, char *argv[])
+#else
+        extern int _do_setenv (int flag, int argc, char *argv[]);
+        int _do_orig_setenv (int flag, int argc, char *argv[])
+#endif  /* CONFIG_ENV_OVERRIDE */
 {
 	int   i, len, oldval;
 	int   console = -1;
