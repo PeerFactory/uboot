@@ -1,0 +1,269 @@
+/*
+ * include/asm/arch-ns9xxx/ns921x_hub.h
+ *
+ * Copyright (C) 2007 by Digi International Inc.
+ * All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 as published by
+ * the Free Software Foundation.
+ */
+/***********************************************************************
+ *
+ * !Revision: $Revision: 1.3 $
+ * !References: [1] NS9215 Hardware Reference Manual, Preliminary January 2007
+ * !Descr:    To get a register address,
+ *            HUB_BASE_PA + ( UART_A * HUB_MODULE_OFFSET ) + UART_INT_ENABLE
+ * !Author:   Markus Pietrek
+ *
+ ***********************************************************************/
+
+#ifndef __ASM_ARCH_NS921X_HUB_H
+#define __ASM_ARCH_NS921X_HUB_H
+
+/* from Hub Module */
+#define HUB_BASE_PA		0x90010000
+
+#define HUB_INT			0x0000
+#define HUB_DMA_RX_CTRL		0x0004
+#define HUB_DMA_RX_DESCR	0x0008
+#define HUB_RX_INT		0x000C
+#define HUB_RX_FIFO_STAT        0x0010
+#define HUB_RX_FIFO		0x0014
+#define HUB_DMA_TX_CTRL		0x0018
+#define HUB_DMA_TX_DESCR	0x001C
+#define HUB_TX_INT		0x0020
+#define HUB_TX_FIFO		0x0028
+#define HUB_TX_FIFO_LAST	0x002C
+
+#define HUB_MODULE_OFFSET	0x8000  /* offset between different UARTs*/
+
+#define UART_PORT_A		0
+#define UART_PORT_B		1
+#define UART_PORT_C		2
+#define UART_PORT_D		3
+
+/* UART Register Mask */
+#define UART_WRAPPER_CFG	0x1000
+#define UART_INT_EN		0x1004
+#define UART_INT_STAT		0x1008
+#define UART_CGAP_CTRL		0x100C
+#define UART_BGAP_CTRL		0x1010
+#define UART_CMATCH_CTRL( c ) ( 0x1014 + (c) * 4 )
+#define UART_CFLOW_CTRL		0x1028
+#define UART_FORCE_TX_CHAR_CTRL	0x102C
+#define UART_ARM_WAKEUP_CTRL	0x1030
+#define UART_TX_BYTE_COUNT	0x1034
+
+/* these are 16750 UART Register. NS in their forethought foregot to mention
+   that they are using 16750 internally. */
+
+#define UART_RX_BUFFER		0x1100  /* only read,  dlab = 0 */
+#define UART_TX_BUFFER		0x1100  /* only write, dlab = 0 */
+#define UART_BAUD_INT		0x1104  /* dlab = 0 */
+#define UART_BRDL		0x1100  /* dlab = 1 */
+#define UART_BRDM		0x1104  /* dlab = 1 */
+#define UART_ID			0x1108  /* read */
+#define UART_FIFO_CTRL		0x1108  /* only write */
+#define UART_LINE_CTRL		0x110C
+#define UART_MODEM_CTRL		0x1110
+#define UART_LINE_STAT		0x1114
+#define UART_MODEM_STAT		0x1118
+#define UART_SCRATCH		0x111C
+
+/* HUB register bit fields */
+
+#define HUB_INT_RX_NCIP		0x80000000
+#define HUB_INT_RX_EICP		0x40000000
+#define HUB_INT_RX_NRIP		0x20000000
+#define HUB_INT_RX_CAIP		0x10000000
+#define HUB_INT_RX_PCIP		0x08000000
+#define HUB_INT_RX_FOFIP	0x04000000
+#define HUB_INT_RX_FSRIP	0x02000000
+#define HUB_INT_TX_NCIP		0x01000000
+#define HUB_INT_TX_ECIP		0x00800000
+#define HUB_INT_TX_NRIP		0x00400000
+#define HUB_INT_TX_CAIPP	0x00200000
+#define HUB_INT_TX_FUFIP	0x00100000
+#define HUB_INT_TX_FSRIP	0x00080000
+#define HUB_INT_MODIP  		0x00040000
+#define HUB_INT_RX_PBUSY	0x00008000
+#define HUB_INT_RX_FIFO_FULL	0x00004000
+#define HUB_INT_RX_FIFO_EMPTY	0x00002000
+#define HUB_INT_TX_PBUSY	0x00001000
+#define HUB_INT_TX_FIFO_FULL	0x00000800
+#define HUB_INT_TX_FIFO_EMPTY	0x00000400
+
+#define HUB_DMA_RX_CTRL_CE	0x80000000
+#define HUB_DMA_RX_CTRL_CA	0x40000000
+#define HUB_DMA_RX_CTRL_CPU	0x00000000
+#define HUB_DMA_RX_CTRL_FLEX	0x20000000
+#define HUB_DMA_RX_CTRL_DIRECT	0x10000000
+#define HUB_DMA_RX_CTRL_STATE_MA 0x0000FC00
+#define HUB_DMA_RX_CTRL_INDEX    0x000003FF
+
+#define HUB_RX_INT_THRS(c)  	(( (c) & 0x7) << 29 )
+#define HUB_RX_INT_FOFIE    	0x04000000
+#define HUB_RX_INT_FSRIE    	0x02000000
+#define HUB_RX_INT_NCIE		0x01000000
+#define HUB_RX_INT_ECIE		0x00800000
+#define HUB_RX_INT_NRIE		0x00400000
+#define HUB_RX_INT_CAIE		0x00200000
+#define HUB_RX_INT_PCIE		0x00100000
+#define HUB_RX_INT_WSTAT	0x00080000
+#define HUB_RX_INT_ISTAT	0x00040000
+#define HUB_RX_INT_LSTAT	0x00020000
+#define HUB_RX_INT_FSTAT	0x00010000
+#define HUB_RX_INT_BLENSTAT	0x0000FFFF
+
+#define HUB_RX_FIFO_STAT_EMPTY	0x00002000
+#define HUB_RX_FIFO_STAT_FULL	0x00001000
+#define HUB_RX_FIFO_BYTE(val)	(((val) >> 9 ) & 0x7)
+#define HUB_RX_FIFO_FFLAG	0x00000080
+#define HUB_RX_FIFO_PSTAT_MA	0x0000007F
+
+#define HUB_DMA_TX_CTRL_CE	0x80000000
+#define HUB_DMA_TX_CTRL_CA	0x40000000
+#define HUB_DMA_TX_CTRL_CPU	0x00000000
+#define HUB_DMA_TX_CTRL_FLEX	0x20000000
+#define HUB_DMA_TX_CTRL_DIRECT	0x10000000
+#define HUB_DMA_TX_CTRL_STATE_MA 0x0000FC00
+#define HUB_DMA_TX_CTRL_INDEX    0x000003FF
+
+#define HUB_TX_INT_THRS(c)  	(( (c) & 0x7) << 29 )
+#define HUB_TX_INT_FUFIE	0x04000000
+#define HUB_TX_INT_FSRIE	0x02000000
+#define HUB_TX_INT_NCIE		0x01000000
+#define HUB_TX_INT_ECIE		0x00800000
+#define HUB_TX_INT_NRIE		0x00400000
+#define HUB_TX_INT_CAIE		0x00200000
+#define HUB_TX_INT_WSTAT 	0x00080000
+#define HUB_TX_INT_ISTAT	0x00040000
+#define HUB_TX_INT_LSTAT	0x00020000
+#define HUB_TX_INT_FSTAT	0x00010000
+#define HUB_TX_INT_BLENSTAT	0x0000FFFF
+
+/* UART register bit fields */
+
+#define UART_WRAPPER_CFG_RX_EN	     0x40000000
+#define UART_WRAPPER_CFG_TX_EN	     0x20000000
+#define UART_WRAPPER_CFG_MODE_UART   0x00000000
+#define UART_WRAPPER_CFG_MODE_HDLC   0x10000000
+#define UART_WRAPPER_CFG_RTS_EN	     0x00080000
+#define UART_WRAPPER_CFG_DTR_EN	     0x00040000
+#define UART_WRAPPER_CFG_RX_FLUSH    0x00020000
+#define UART_WRAPPER_CFG_TX_FLUSH    0x00010000
+#define UART_WRAPPER_CFG_RX_BYTES(c) (( (c) >> 14 ) & 0x3 )
+#define UART_WRAPPER_CFG_RX_CLOSE    0x00002000
+#define UART_WRAPPER_CFG_TX_FLOW_MA  0x00000FC0
+#define UART_WRAPPER_CFG_TX_FLOW_CTS 0x00000040
+#define UART_WRAPPER_CFG_TX_FLOW_DCD 0x00000080
+#define UART_WRAPPER_CFG_TX_FLOW_DSR 0x00000100
+#define UART_WRAPPER_CFG_TX_FLOW_RI  0x00000200
+#define UART_WRAPPER_CFG_TX_FLOW_SW  0x00000400
+#define UART_WRAPPER_CFG_TX_FLOW_RX  0x00000800
+#define UART_WRAPPER_CFG_RL	     0x00000020
+#define UART_WRAPPER_CFG_RTS	     0x00000010
+#define UART_WRAPPER_CFG_RS485OFF_0   0x00000000
+#define UART_WRAPPER_CFG_RS485OFF_1   0x00000004
+#define UART_WRAPPER_CFG_RS485OFF_1_5 0x00000008
+#define UART_WRAPPER_CFG_RS485OFF_2   0x0000000C
+#define UART_WRAPPER_CFG_RS485ON_0    0x00000000
+#define UART_WRAPPER_CFG_RS485ON_1    0x00000001
+#define UART_WRAPPER_CFG_RS485ON_1_5  0x00000002
+#define UART_WRAPPER_CFG_RS485ON_2    0x00000003
+
+#define UART_INT_UINT		0x00200000
+#define UART_INT_FORCE		0x00100000
+#define UART_INT_OFLOW		0x00080000
+#define UART_INT_PARITY		0x00040000
+#define UART_INT_FRAME		0x00020000
+#define UART_INT_BREAK		0x00010000
+#define UART_INT_BGAP		0x00008000
+#define UART_INT_RX_CLS		0x00004000
+#define UART_INT_CGAP		0x00002000
+#define UART_INT_MATCH(c)	( 1 << ( ( c ) + 8 ) )
+#define UART_INT_DSR		0x00000080
+#define UART_INT_DCD		0x00000040
+#define UART_INT_CTS		0x00000020
+#define UART_INT_RI		0x00000010
+#define UART_INT_TBC		0x00000008
+#define UART_INT_RBC		0x00000004
+#define UART_INT_TX_IDLE	0x00000002
+#define UART_INT_RX_IDLE	0x00000001
+
+/* INT Status is the same */
+
+#define UART_CGAP_CTRL_EN	0x80000000
+#define UART_CGAP_CTRL_VAL(c) 	( ( c ) & 0x00ffffff )
+
+#define UART_BGAP_CTRL_EN	0x80000000
+#define UART_BGAP_CTRL_VAL(c) 	( ( c ) & 0x00ffffff )
+
+#define UART_CMATCH_CTRL_EN	0x80000000
+#define UART_CMATCH_CTRL_MASK(c) ( ( ( c ) & 0xff ) << 16 )
+#define UART_CMATCH_CTRL_DATA(c) ( ( c ) & 0xff )
+#define UART_CFLOW_CTRL_STATE 	0x00000400
+#define UART_CFLOW_CTRL_DIS(c) 	0
+#define UART_CFLOW_CTRL_XON(c)  ( 2 << ( ( c ) * 2 ) )
+#define UART_CFLOW_CTRL_XOFF(c) ( 3 << ( ( c ) * 2  ) )
+
+#define UART_FORCE_TX_CHAR_CTRL_EN     0x80000000
+#define UART_FORCE_TX_CHAR_CTRL_BUSY   0x40000000
+#define UART_FORCE_TX_CHAR_CTRL_VAL(c) ( ( c ) & 0xff )
+ 
+#define UART_ARM_WAKEUP_CTRL_EN	0x00000001
+
+#define UART_TX_BYTE_COUNT_EN	  0x80000000
+#define UART_TX_BYTE_COUNT_VAL(c) ( ( c ) & 0x00ffffff )
+#define UART_RX_BUFFER_VAL(c)   ( ( c ) & 0xff )
+#define UART_TX_BUFFER_VAL(c)   ( ( c ) & 0xff )
+
+#define UART_BAUD_INT_ETBEI	0x00000002
+#define UART_BAUD_INT_ERBFI	0x00000001
+
+#define UART_BRDL_VAL(c)        ( ( c ) & 0xff )
+#define UART_BRDM_VAL(c)        ( ( c ) & 0xff )
+
+#define UART_FIFO_CTRL_TX_CLEAR 0x00000004
+#define UART_FIFO_CTRL_RX_CLEAR 0x00000002
+#define UART_FIFO_CTRL_EN	0x00000001
+
+#define UART_LINE_CTRL_DLAB	0x00000080
+#define UART_LINE_CTRL_SB	0x00000040
+#define UART_LINE_CTRL_SP	0x00000020
+#define UART_LINE_CTRL_EPS	0x00000010
+#define UART_LINE_CTRL_PAR_NO	0x00000000
+#define UART_LINE_CTRL_PAR_EN	0x00000008
+#define UART_LINE_CTRL_STOP_1	0x00000000
+#define UART_LINE_CTRL_STOP_2	0x00000004
+#define UART_LINE_CTRL_WLS_MA	0x00000003
+#define UART_LINE_CTRL_WLS_5	0x00000000
+#define UART_LINE_CTRL_WLS_6	0x00000001
+#define UART_LINE_CTRL_WLS_7	0x00000002
+#define UART_LINE_CTRL_WLS_8	0x00000003
+
+#define UART_MODEM_CTRL_AFE	0x00000020
+#define UART_MODEM_CTRL_LLB	0x00000010
+#define UART_MODEM_CTRL_RTS	0x00000002
+#define UART_MODEM_CTRL_DTR	0x00000001
+
+#define UART_LINE_STAT_FIER	0x00000080
+#define UART_LINE_STAT_TEMT	0x00000040
+#define UART_LINE_STAT_THRE	0x00000020
+#define UART_LINE_STAT_BI	0x00000010
+#define UART_LINE_STAT_FE	0x00000008
+#define UART_LINE_STAT_PE	0x00000004
+#define UART_LINE_STAT_OE	0x00000002
+#define UART_LINE_STAT_DR	0x00000001
+
+#define UART_MODEM_STAT_DCD	0x00000080
+#define UART_MODEM_STAT_RI	0x00000040
+#define UART_MODEM_STAT_DSR	0x00000020
+#define UART_MODEM_STAT_CTS	0x00000010
+#define UART_MODEM_STAT_DCDC	0x00000008
+#define UART_MODEM_STAT_TERI	0x00000004
+#define UART_MODEM_STAT_DDSR	0x00000002
+#define UART_MODEM_STAT_DCTS	0x00000001
+
+#endif /*__ASM_ARCH_NS921X_HUB_H */
