@@ -194,6 +194,7 @@ LIBS += arch/arm/cpu/ixp/npe/libnpe.a
 endif
 ifeq ($(BOARD),cc9p921x)
 LIBS += arch/arm/cpu/arm926ejs/ns921x/libns921x.a
+LIBS += lib_generic/libgeneric.a
 LIBS += common/digi/cmd_nvram/libnvram.a
 endif
 LIBS += arch/$(ARCH)/lib/lib$(ARCH).a

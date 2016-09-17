@@ -693,7 +693,11 @@ static int do_digi_dboot( cmd_tbl_t* cmdtp, int flag, int argc, char* argv[] )
         return !RunCmd( szCmd );
 
 usage:
+#ifdef CFG_SYS_LONGHELP
         printf( "Usage:\n%s\n%s\n", cmdtp->usage, cmdtp->help );
+#else
+        printf( "Usage:\n%s\n", cmdtp->usage);
+#endif
         return 1;
 
 error:
@@ -1034,8 +1038,11 @@ done:
 
         return 0;
 usage:
+#ifdef CFG_SYS_LONGHELP
         printf( "Usage:\n%s\n%s\n", cmdtp->usage, cmdtp->help );
-
+#else
+        printf( "Usage:\n%s\n%s\n", cmdtp->usage );
+#endif
 error:
         if( ( NULL != pPartEntry ) &&
             ( pPartEntry->flags.bFixed || pPartEntry->flags.bReadOnly ) )
@@ -1166,7 +1173,11 @@ static int do_erase_pt( cmd_tbl_t* cmdtp, int flag, int argc, char* argv[] )
         return 0;
 
 usage:
+#ifdef CONFIG_STATUS_LED
         printf( "Usage:\n%s\n%s\n", cmdtp->usage, cmdtp->help );
+#else
+        printf( "Usage:\n%s\n%s\n", cmdtp->usage );
+#endif
 
 error:
         return 1;
