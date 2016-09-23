@@ -16,7 +16,9 @@
 
 #define local static
 #define ZEXPORT	/* empty */
+#ifdef DUPLICATE_DEFINTION
 unsigned long crc32 (unsigned long, const unsigned char *, unsigned int);
+#endif
 
 #ifdef DYNAMIC_CRC_TABLE
 
@@ -150,10 +152,13 @@ const uLongf * ZEXPORT get_crc_table()
 #define DO8(buf)  DO4(buf); DO4(buf);
 
 /* ========================================================================= */
+#ifdef DUPLICATE
 uLong ZEXPORT crc32(crc, buf, len)
     uLong crc;
     const Bytef *buf;
     uInt len;
+#endif
+uint32_t crc32 (uint32_t crc, const unsigned char *buf, uint len)
 {
 #ifdef DYNAMIC_CRC_TABLE
     if (crc_table_empty)

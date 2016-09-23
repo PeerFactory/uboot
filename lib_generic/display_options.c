@@ -39,7 +39,7 @@ int display_options (void)
  * print sizes as "xxx kB", "xxx.y kB", "xxx MB" or "xxx.y MB" as needed;
  * allow for optional trailing string (like "\n")
  */
-void print_size (ulong size, const char *s)
+void print_size (unsigned long long size, const char *s)
 {
 	ulong m, n;
 	ulong d = 1 << 20;		/* 1 MB */
