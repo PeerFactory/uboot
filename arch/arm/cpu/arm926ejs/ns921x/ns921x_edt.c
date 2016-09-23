@@ -14,7 +14,7 @@
 #include <asm-arm/arch-ns9xxx/io.h>
 #include <asm-arm/arch-ns9xxx/ns921x_sys.h>
 #include <asm-arm/arch-ns9xxx/ns9xxx_mem.h>
-#include <partition.h>
+#include <cmd_nvram/partition.h>
 #include <nvram.h>
 #include <linux/mtd/compat.h>
 #if  (CONFIG_COMMANDS & CFG_CMD_BSP && defined(CONFIG_DIGI_CMD))
