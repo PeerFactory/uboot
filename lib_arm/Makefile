@@ -1,9 +1,6 @@
 #
-# (C) Copyright 2000-2005
+# (C) Copyright 2002-2006
 # Wolfgang Denk, DENX Software Engineering, wd@denx.de.
-#
-# Copyright (C) 2007 by Digi International Inc.
-# All rights reserved.
 #
 # See file CREDITS for list of people who contributed to this
 # project.
@@ -26,20 +23,15 @@
 
 include $(TOPDIR)/config.mk
 
-LIB	:= libns921x.a
+LIB	= $(obj)lib$(ARCH).a
 
-COBJS	:= timer.o serial_ns921x.o ns921x_edt.o ns921x_eth.o \
-	   fim_serial.o fim.o fim_sdio.o
+SOBJS	= _ashldi3.o _ashrdi3.o _divsi3.o _modsi3.o _udivsi3.o _umodsi3.o
 
-SOBJS	:= reset.o
-OBJS	:= $(addprefix $(obj),$(COBJS) $(SOBJS))
-SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c)
+COBJS	= armlinux.o board.o \
+	  cache.o div0.o arm9.o
 
-DIGI_DIR := $(TOPDIR)/common/digi
-DIGI_BSP := -I $(DIGI_DIR) -I $(DIGI_DIR)/cmd_nvram/ -I $(DIGI_DIR)/cmd_nvram/lib/include -DUBOOT
-CFLAGS   += $(DIGI_BSP)
-
-all:	$(LIB)
+SRCS 	:= $(SOBJS:.o=.S) $(COBJS:.o=.c)
+OBJS	:= $(addprefix $(obj),$(SOBJS) $(COBJS))
 
 $(LIB):	$(obj).depend $(OBJS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)

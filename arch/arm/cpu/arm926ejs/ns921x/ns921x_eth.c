@@ -228,7 +228,7 @@ static int ns921x_miiphy_write (char* devname, unsigned char addr, unsigned char
  ***********************************************************************/
 int ns921x_miiphy_initialize( bd_t *bis )
 {
-        miiphy_register( "ns921x", ns921x_miiphy_read, ns921x_miiphy_write );
+        miiphy_register( "ns921x", (const char *)ns921x_miiphy_read, ns921x_miiphy_write );
         return 0;
 }
 

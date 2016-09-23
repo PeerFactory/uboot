@@ -30,6 +30,7 @@
 #include "env.h"                /* CW */
 #include "mtd.h"
 #include "partition.h"
+#include "../arch/arm/include/asm/string.h"
 
 /* ********** defines ********** */
 
