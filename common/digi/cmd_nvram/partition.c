@@ -21,8 +21,10 @@
 #if (CONFIG_COMMANDS & CFG_CMD_NAND)
 # include <nand.h>
 #endif  /* CFG_CMD_NAND */
-
+#ifdef USE_UBOOT_VERSION
 #include <zlib.h>               /* inflate */
+#endif
+#include <u-boot/zlib.h>               /* inflate */
 
 #include "nvram.h"
 #include "env.h"                /* CW */

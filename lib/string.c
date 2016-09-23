@@ -307,6 +307,7 @@ char * strpbrk(const char * cs,const char * ct)
 }
 #endif
 
+#define __HAVE_ARCH_STRTOK
 #ifndef __HAVE_ARCH_STRTOK
 /**
  * strtok - Split a string into tokens

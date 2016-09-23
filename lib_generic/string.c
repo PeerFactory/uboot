@@ -56,6 +56,7 @@ int strnicmp(const char *s1, const char *s2, size_t len)
 
 char * ___strtok;
 
+#define __HAVE_ARCH_STRCPY
 #ifndef __HAVE_ARCH_STRCPY
 /**
  * strcpy - Copy a %NUL terminated string
@@ -72,6 +73,7 @@ char * strcpy(char * dest,const char *src)
 }
 #endif
 
+#define __HAVE_ARCH_STRNCPY
 #ifndef __HAVE_ARCH_STRNCPY
 /**
  * strncpy - Copy a length-limited, %NUL-terminated string
@@ -94,6 +96,7 @@ char * strncpy(char * dest,const char *src,size_t count)
 }
 #endif
 
+#define __HAVE_ARCH_STRCAT
 #ifndef __HAVE_ARCH_STRCAT
 /**
  * strcat - Append one %NUL-terminated string to another
@@ -113,6 +116,7 @@ char * strcat(char * dest, const char * src)
 }
 #endif
 
+#define __HAVE_ARCH_STRNCAT
 #ifndef __HAVE_ARCH_STRNCAT
 /**
  * strncat - Append a length-limited, %NUL-terminated string to another
@@ -142,6 +146,7 @@ char * strncat(char *dest, const char *src, size_t count)
 }
 #endif
 
+#define __HAVE_ARCH_STRCMP
 #ifndef __HAVE_ARCH_STRCMP
 /**
  * strcmp - Compare two strings
@@ -161,6 +166,7 @@ int strcmp(const char * cs,const char * ct)
 }
 #endif
 
+#define __HAVE_ARCH_STRNCMP
 #ifndef __HAVE_ARCH_STRNCMP
 /**
  * strncmp - Compare two length-limited strings
@@ -182,6 +188,7 @@ int strncmp(const char * cs,const char * ct,size_t count)
 }
 #endif
 
+#define __HAVE_ARCH_STRCHR
 #ifndef __HAVE_ARCH_STRCHR
 /**
  * strchr - Find the first occurrence of a character in a string
@@ -197,6 +204,7 @@ char * strchr(const char * s, int c)
 }
 #endif
 
+#define __HAVE_ARCH_STRRCHR
 #ifndef __HAVE_ARCH_STRRCHR
 /**
  * strrchr - Find the last occurrence of a character in a string
@@ -214,6 +222,7 @@ char * strrchr(const char * s, int c)
 }
 #endif
 
+#define __HAVE_ARCH_STRLEN
 #ifndef __HAVE_ARCH_STRLEN
 /**
  * strlen - Find the length of a string
@@ -229,6 +238,7 @@ size_t strlen(const char * s)
 }
 #endif
 
+#define __HAVE_ARCH_STRNLEN
 #ifndef __HAVE_ARCH_STRNLEN
 /**
  * strnlen - Find the length of a length-limited string
@@ -245,6 +255,7 @@ size_t strnlen(const char * s, size_t count)
 }
 #endif
 
+#define __HAVE_ARCH_STRDUP
 #ifndef __HAVE_ARCH_STRDUP
 char * strdup(const char *s)
 {
@@ -260,6 +271,7 @@ char * strdup(const char *s)
 }
 #endif
 
+#define __HAVE_ARCH_STRSPN
 #ifndef __HAVE_ARCH_STRSPN
 /**
  * strspn - Calculate the length of the initial substring of @s which only
@@ -287,6 +299,7 @@ size_t strspn(const char *s, const char *accept)
 }
 #endif
 
+#define __HAVE_ARCH_STRPBRK
 #ifndef __HAVE_ARCH_STRPBRK
 /**
  * strpbrk - Find the first occurrence of a set of characters
@@ -307,6 +320,7 @@ char * strpbrk(const char * cs,const char * ct)
 }
 #endif
 
+#define __HAVE_ARCH_STRTOK
 #ifndef __HAVE_ARCH_STRTOK
 /**
  * strtok - Split a string into tokens
@@ -336,6 +350,7 @@ char * strtok(char * s,const char * ct)
 }
 #endif
 
+#define __HAVE_ARCH_STRSEP
 #ifndef __HAVE_ARCH_STRSEP
 /**
  * strsep - Split a string into tokens
@@ -364,6 +379,7 @@ char * strsep(char **s, const char *ct)
 }
 #endif
 
+#define __HAVE_ARCH_STRSWAB
 #ifndef __HAVE_ARCH_STRSWAB
 /**
  * strswab - swap adjacent even and odd bytes in %NUL-terminated string
@@ -392,6 +408,7 @@ char *strswab(const char *s)
 }
 #endif
 
+#define __HAVE_ARCH_MEMSET
 #ifndef __HAVE_ARCH_MEMSET
 /**
  * memset - Fill a region of memory with the given value
@@ -412,6 +429,7 @@ void * memset(void * s,int c,size_t count)
 }
 #endif
 
+#define __HAVE_ARCH_BCOPY
 #ifndef __HAVE_ARCH_BCOPY
 /**
  * bcopy - Copy one area of memory to another
@@ -436,6 +454,7 @@ char * bcopy(const char * src, char * dest, int count)
 }
 #endif
 
+#define __HAVE_ARCH_MEMCPY
 #ifndef __HAVE_ARCH_MEMCPY
 /**
  * memcpy - Copy one area of memory to another
@@ -541,6 +560,7 @@ void* memcpy32( void* pvDst, const void* pvSrc, __kernel_size_t iLen )
         return pvDst;
 }
 
+#define __HAVE_ARCH_MEMMOVE
 #ifndef __HAVE_ARCH_MEMMOVE
 /**
  * memmove - Copy one area of memory to another
@@ -571,6 +591,7 @@ void * memmove(void * dest,const void *src,size_t count)
 }
 #endif
 
+#define __HAVE_ARCH_MEMCMP
 #ifndef __HAVE_ARCH_MEMCMP
 /**
  * memcmp - Compare two areas of memory
@@ -590,6 +611,7 @@ int memcmp(const void * cs,const void * ct,size_t count)
 }
 #endif
 
+#define __HAVE_ARCH_MEMSCAN
 #ifndef __HAVE_ARCH_MEMSCAN
 /**
  * memscan - Find a character in an area of memory.
@@ -614,6 +636,7 @@ void * memscan(void * addr, int c, size_t size)
 }
 #endif
 
+#define __HAVE_ARCH_STRSTR
 #ifndef __HAVE_ARCH_STRSTR
 /**
  * strstr - Find the first substring in a %NUL terminated string
@@ -638,6 +661,7 @@ char * strstr(const char * s1,const char * s2)
 }
 #endif
 
+#define __HAVE_ARCH_MEMCHR
 #ifndef __HAVE_ARCH_MEMCHR
 /**
  * memchr - Find a character in an area of memory.

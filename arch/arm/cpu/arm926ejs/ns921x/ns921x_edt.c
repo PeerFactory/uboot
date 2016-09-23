@@ -10,11 +10,10 @@
 #include <config.h>
 #include <common.h>
 #include <lcd.h>
-#include <asm-arm/io.h>
-#include <asm/arch-ns9xxx/ns921x_gpio.h>
-#include <asm/arch-ns9xxx/io.h>
-#include <asm/arch-ns9xxx/ns921x_sys.h>
-#include <asm/arch-ns9xxx/ns9xxx_mem.h>
+#include <asm-arm/arch-ns9xxx/ns921x_gpio.h>
+#include <asm-arm/arch-ns9xxx/io.h>
+#include <asm-arm/arch-ns9xxx/ns921x_sys.h>
+#include <asm-arm/arch-ns9xxx/ns9xxx_mem.h>
 #include <partition.h>
 #include <nvram.h>
 #include <linux/mtd/compat.h>
