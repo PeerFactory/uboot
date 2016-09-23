@@ -289,6 +289,8 @@ void print_date( void )
 {
 }
 #endif
+
+int eth_use_mac_from_env( bd_t* pbis );
 /**
  * board_late_init - last step before console
  */

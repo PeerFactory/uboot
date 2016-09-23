@@ -40,7 +40,7 @@
  */
 #define CONFIG_ARM926EJS	1	/* This is an ARM926EJS Core	*/
 #define CONFIG_NS921X		1	/* in an NetSilicon NS921x SoC */
-#define CONFIG_NS9215		1	/* in an NetSilicon NS9215 SoC */
+/* RLS #define CONFIG_NS9215		1*/ 	/* is an NetSilicon NS9215 SoC */ 
 #define CONFIG_CC9P9215		1       /* on a ConnectCore 9P 9360 module */
 #if defined(CONFIG_JSCC9P9215)
 #define CONFIG_MACH_CC9P9215JS	1	/* Select board mach-type */
