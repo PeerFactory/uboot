@@ -198,8 +198,6 @@ LIBS += arch/arm/cpu/ixp/npe/libnpe.a
 endif
 ifeq ($(BOARD),cc9p921x)
 LIBS += arch/arm/cpu/arm926ejs/ns921x/libns921x.a
-LIBS += lib_generic/libgeneric.a
-LIBS += common/digi/cmd_nvram/libnvram.a
 endif
 LIBS += arch/$(ARCH)/lib/lib$(ARCH).a
 LIBS += fs/cramfs/libcramfs.a fs/fat/libfat.a fs/fdos/libfdos.a fs/jffs2/libjffs2.a \
@@ -257,7 +255,9 @@ LIBS += common/digi/libdigi.a
 LIBS += lib/libfdt/libfdt.a
 LIBS += api/libapi.a
 LIBS += post/libpost.a
-
+ifeq ($(BOARD),cc9p921x)
+LIBS += common/digi/cmd_nvram/libnvram.a
+endif
 ifeq ($(SOC),omap3)
 LIBS += $(CPUDIR)/omap-common/libomap-common.a
 endif

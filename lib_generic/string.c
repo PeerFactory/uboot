@@ -53,10 +53,8 @@ int strnicmp(const char *s1, const char *s2, size_t len)
 	return (int)c1 - (int)c2;
 }
 #endif
-
 char * ___strtok;
 
-#define __HAVE_ARCH_STRCPY
 #ifndef __HAVE_ARCH_STRCPY
 /**
  * strcpy - Copy a %NUL terminated string

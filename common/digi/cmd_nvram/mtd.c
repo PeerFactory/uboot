@@ -20,6 +20,7 @@
 
 #include "mtd.h"
 #include "nvram_types.h"        /* CLEAR */
+# define memcpy32(a,b,c)	memcpy(a,b,c)
 
 #if (CONFIG_COMMANDS & CFG_CMD_NAND)
 # define HAVE_NAND

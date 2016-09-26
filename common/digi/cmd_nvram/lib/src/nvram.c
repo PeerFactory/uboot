@@ -17,6 +17,7 @@
 #include "nvram.h"
 #include "nvram_priv.h"
 #include "nvram_version.h"
+#define memcpy32(a,b,c)	memcpy(a,b,c)
 
 #define NV_RESERVED_CRITICAL_SIZE 2048
 

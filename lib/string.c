@@ -21,7 +21,6 @@
 #include <malloc.h>
 
 
-#if 0 /* not used - was: #ifndef __HAVE_ARCH_STRNICMP */
 /**
  * strnicmp - Case insensitive, length-limited string comparison
  * @s1: One string
@@ -52,11 +51,9 @@ int strnicmp(const char *s1, const char *s2, size_t len)
 	}
 	return (int)c1 - (int)c2;
 }
-#endif
 
 char * ___strtok;
 
-#define __HAVE_ARCH_STRCPY
 #ifndef __HAVE_ARCH_STRCPY
 /**
  * strcpy - Copy a %NUL terminated string
@@ -308,7 +305,6 @@ char * strpbrk(const char * cs,const char * ct)
 }
 #endif
 
-#define __HAVE_ARCH_STRTOK
 #ifndef __HAVE_ARCH_STRTOK
 /**
  * strtok - Split a string into tokens

@@ -42,6 +42,8 @@
 #define CONFIG_NS921X		1	/* in an NetSilicon NS921x SoC */
 /* RLS #define CONFIG_NS9215		1*/ 	/* is an NetSilicon NS9215 SoC */ 
 #define CONFIG_CC9P9215		1       /* on a ConnectCore 9P 9360 module */
+#define CONFIG_FLASH_CFI_DRIVER 1
+#define CONFIG_SYS_FLASH_CFI    1
 #if defined(CONFIG_JSCC9P9215)
 #define CONFIG_MACH_CC9P9215JS	1	/* Select board mach-type */
 #else
