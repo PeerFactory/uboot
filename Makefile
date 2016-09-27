@@ -2131,15 +2131,23 @@ cc9p9215js_dbg_config :	unconfig
 		echo "#define CFG_APPEND_CRC32" >> ./include/config.h; \
 		echo "APPEND_CRC32=y"	>>include/config.mk; \
 		echo "#define CONFIG_NS9215" >> ./include/config.h; \
+		echo "#define CONFIG_COMMANDS 1" >> ./include/config.h; \
+		echo "#define CFG_CMD_BSP 1" >> ./include/config.h; \
+		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h; \
 		echo "#define CONFIG_CC9C" >> ./include/config.h; \
 		echo "#undef CONFIG_CC9C_NAND" >> ./include/config.h; \
 		echo "#undef CONFIG_CMD_NAND" >> ./include/config.h; \
+		echo "#define CONFIG_CMD_FLASH 1" >> ./include/config.h; \
+		echo "#define CFG_CMD_FLASH 1" >> ./include/config.h; \
 		echo "#define PHYS_SDRAM_1_SIZE SZ_16M" >> ./include/config.h; \
 		echo "#undef CONFIG_STATUS_LED" >> ./include/config.h; \
 		echo "#include <configs/digi_common.h>" >> ./include/config.h; \
 		echo "Configuring with 16MB SDRAM and NOR Flash"; \
 		echo "#define CONFIG_SYS_MAXARGS CFG_MAXARGS" >> ./include/config.h; \
 		echo "#define CONFIG_SYS_MAX_FLASH_BANKS CFG_MAX_FLASH_BANKS" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_MAX_FLASH_SECT CFG_MAX_FLASH_SECT" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_FLASH_BASE CFG_FLASH_BASE" >> ./include/config.h; \
+		echo "#define CONFIG_SYS_MONITOR_BASE CFG_FLASH_BASE" >> ./include/config.h; \
 		echo "#define CONFIG_SYS_I2C_SPEED CFG_I2C_SPEED" >> ./include/config.h; \
 		echo "#define CONFIG_ENV_SIZE CFG_ENV_SIZE" >> ./include/config.h; \
 		echo "#define CONFIG_SYS_MEMTEST_START CFG_MEMTEST_START" >> ./include/config.h; \

@@ -27,7 +27,7 @@
 #include <common.h>
 #include <spi.h>
 
-#include <malloc.h>
+#if defined(CONFIG_SOFT_SPI)
 
 /*-----------------------------------------------------------------------
  * Definitions
@@ -39,15 +39,13 @@
 #define PRINTD(fmt,args...)
 #endif
 
-struct soft_spi_slave {
-	struct spi_slave slave;
-	unsigned int mode;
-};
-
-static inline struct soft_spi_slave *to_soft_spi(struct spi_slave *slave)
-{
-	return container_of(slave, struct soft_spi_slave, slave);
-}
+#if defined(CONFIG_CC9P9215) || defined(CONFIG_CCW9P9215)
+# include <asm-arm/arch-ns9xxx/ns921x_gpio.h>
+# include <asm-arm/arch-ns9xxx/io.h>
+#define UBOOT
+# include <nvram_types.h> /* atoi */
+int spi_delay = -1;
+#endif
 
 /*=====================================================================*/
 /*                         Public Functions                            */
@@ -59,63 +57,13 @@ static inline struct soft_spi_slave *to_soft_spi(struct spi_slave *slave)
 void spi_init (void)
 {
 #ifdef	SPI_INIT
-	volatile immap_t *immr = (immap_t *)CONFIG_SYS_IMMR;
-
+# ifdef CONFIG_SYS_IMMR
+	volatile immap_t *immr = (immap_t *)CFG_IMMR;
+# endif
 	SPI_INIT;
 #endif
 }
 
-struct spi_slave *spi_setup_slave(unsigned int bus, unsigned int cs,
-		unsigned int max_hz, unsigned int mode)
-{
-	struct soft_spi_slave *ss;
-
-	if (!spi_cs_is_valid(bus, cs))
-		return NULL;
-
-	ss = malloc(sizeof(struct soft_spi_slave));
-	if (!ss)
-		return NULL;
-
-	ss->slave.bus = bus;
-	ss->slave.cs = cs;
-	ss->mode = mode;
-
-	/* TODO: Use max_hz to limit the SCK rate */
-
-	return &ss->slave;
-}
-
-void spi_free_slave(struct spi_slave *slave)
-{
-	struct soft_spi_slave *ss = to_soft_spi(slave);
-
-	free(ss);
-}
-
-int spi_claim_bus(struct spi_slave *slave)
-{
-#ifdef CONFIG_SYS_IMMR
-	volatile immap_t *immr = (immap_t *)CONFIG_SYS_IMMR;
-#endif
-	struct soft_spi_slave *ss = to_soft_spi(slave);
-
-	/*
-	 * Make sure the SPI clock is in idle state as defined for
-	 * this slave.
-	 */
-	if (ss->mode & SPI_CPOL)
-		SPI_SCL(1);
-	else
-		SPI_SCL(0);
-
-	return 0;
-}
-
-void spi_release_bus(struct spi_slave *slave)
-{
-	/* Nothing to do */
-}
 
 /*-----------------------------------------------------------------------
  * SPI transfer
@@ -128,54 +76,61 @@ void spi_release_bus(struct spi_slave *slave)
  * and "din" can point to the same memory location, in which case the
  * input data overwrites the output data (since both are buffered by
  * temporary variables, this is OK).
+ *
+ * If the chipsel() function is not NULL, it is called with a parameter
+ * of '1' (chip select active) at the start of the transfer and again with
+ * a parameter of '0' at the end of the transfer.
+ *
+ * If the chipsel() function _is_ NULL, it the responsibility of the
+ * caller to make the appropriate chip select active before calling
+ * spi_xfer() and making it inactive after spi_xfer() returns.
  */
-int  spi_xfer(struct spi_slave *slave, unsigned int bitlen,
-		const void *dout, void *din, unsigned long flags)
+int  spi_xfer(spi_chipsel_type chipsel, int bitlen, uchar *dout, uchar *din)
 {
 #ifdef CONFIG_SYS_IMMR
-	volatile immap_t *immr = (immap_t *)CONFIG_SYS_IMMR;
+	volatile immap_t *immr = (immap_t *)CFG_IMMR;
 #endif
-	struct soft_spi_slave *ss = to_soft_spi(slave);
-	uchar		tmpdin  = 0;
-	uchar		tmpdout = 0;
-	const u8	*txd = dout;
-	u8		*rxd = din;
-	int		cpol = ss->mode & SPI_CPOL;
-	int		cpha = ss->mode & SPI_CPHA;
-	unsigned int	j;
+	uchar tmpdin  = 0;
+	uchar tmpdout = 0;
+	int   j;
 
-	PRINTD("spi_xfer: slave %u:%u dout %08X din %08X bitlen %u\n",
-		slave->bus, slave->cs, *(uint *)txd, *(uint *)rxd, bitlen);
+	PRINTD("spi_xfer: chipsel %d dout %08X din %08X bitlen %d\n",
+		(int)chipsel, *(uint *)dout, *(uint *)din, bitlen);
 
-	if (flags & SPI_XFER_BEGIN)
-		spi_cs_activate(slave);
+#if defined(CONFIG_CC9P9215) || defined(CONFIG_CCW9P9215)
+	if (spi_delay < 0 ) {
+		char *s;
+
+		spi_delay = 10;
+		s = getenv("spidelay");
+		if (s != NULL)
+			spi_delay = atoi(s);
+	}
+#endif
+
+	if(chipsel != NULL) {
+		(*chipsel)(1);	/* select the target chip */
+	}
 
 	for(j = 0; j < bitlen; j++) {
 		/*
 		 * Check if it is time to work on a new byte.
 		 */
 		if((j % 8) == 0) {
-			tmpdout = *txd++;
+			tmpdout = *dout++;
 			if(j != 0) {
-				*rxd++ = tmpdin;
+				*din++ = tmpdin;
 			}
 			tmpdin  = 0;
 		}
-
-		if (!cpha)
-			SPI_SCL(!cpol);
+		SPI_SCL(0);
 		SPI_SDA(tmpdout & 0x80);
 		SPI_DELAY;
-		if (cpha)
-			SPI_SCL(!cpol);
-		else
-			SPI_SCL(cpol);
-		tmpdin	<<= 1;
-		tmpdin	|= SPI_READ;
-		tmpdout	<<= 1;
+		SPI_SCL(1);
 		SPI_DELAY;
-		if (cpha)
-			SPI_SCL(cpol);
+		tmpdin  <<= 1;
+		tmpdin   |= SPI_READ;
+		tmpdout <<= 1;
 	}
 	/*
 	 * If the number of bits isn't a multiple of 8, shift the last
@@ -184,10 +139,16 @@ int  spi_xfer(struct spi_slave *slave, unsigned int bitlen,
 	 */
 	if((bitlen % 8) != 0)
 		tmpdin <<= 8 - (bitlen % 8);
-	*rxd++ = tmpdin;
+	*din++ = tmpdin;
 
-	if (flags & SPI_XFER_END)
-		spi_cs_deactivate(slave);
+	SPI_SCL(0);		/* SPI wants the clock left low for idle */
+
+	if(chipsel != NULL) {
+		(*chipsel)(0);	/* deselect the target chip */
+
+	}
 
 	return(0);
 }
+
+#endif	/* CONFIG_SOFT_SPI */
