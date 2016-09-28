@@ -55,6 +55,7 @@ static void cache_disable(uint32_t cache_bit)
 }
 #endif
 
+#ifndef CONFIG_NS9215
 #ifdef CONFIG_SYS_NO_ICACHE
 void icache_enable (void)
 {
@@ -86,7 +87,9 @@ int icache_status(void)
 	return (get_cr() & CR_I) != 0;
 }
 #endif
+#endif
 
+#ifndef CONFIG_NS9215
 #ifdef CONFIG_SYS_NO_DCACHE
 void dcache_enable (void)
 {
@@ -117,4 +120,5 @@ int dcache_status(void)
 {
 	return (get_cr() & CR_C) != 0;
 }
+#endif
 #endif

@@ -49,10 +49,10 @@
                 }                                          \
         }
 
-char g_bDVTIsEnabled;
+extern char g_bDVTIsEnabled;
 extern char g_bDVTStatusChanged;
-char g_bDVTHadError;
-char g_bDVTHadWarning;
+extern char g_bDVTHadError;
+extern char g_bDVTHadWarning;
 
 /**
  * DVTIsEnabled - 

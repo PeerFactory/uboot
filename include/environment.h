@@ -149,9 +149,10 @@ typedef	struct environment_s {
 	unsigned char	data[ENV_SIZE]; /* Environment data		*/
 } env_t;
 
+#ifdef REMOVE
 /* Function that returns a character from the environment */
 unsigned char (*env_get_char) (int);
-
+#endif
 /* Function that returns a pointer to a value from the environment */
 unsigned char *env_get_addr(int);
 unsigned char env_get_char_memory (int index);

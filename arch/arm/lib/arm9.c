@@ -334,7 +334,7 @@ int cleanup_before_linux (void)
 
 	return (0);
 }
-
+#ifndef CONFIG_NS9215
 int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 {
 	disable_interrupts ();
@@ -345,6 +345,7 @@ int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	/*NOTREACHED*/
 	return (0);
 }
+#endif
 
 void icache_enable (void)
 {
