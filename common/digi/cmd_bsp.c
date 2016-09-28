@@ -153,7 +153,7 @@ int findpart_tableentry(  const part_t **ppPart,
         int            iCount );
 void setup_before_os_jump(nv_os_type_e eOSType, image_source_e eType);
 
-extern image_header_t header;
+image_header_t header;
 extern int NetSilent;		/* Whether to silence the net commands output */
 extern ulong TftpRRQTimeoutMSecs;
 extern int TftpRRQTimeoutCountMax;

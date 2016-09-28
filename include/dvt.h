@@ -49,10 +49,10 @@
                 }                                          \
         }
 
-extern char g_bDVTIsEnabled;
+char g_bDVTIsEnabled;
 extern char g_bDVTStatusChanged;
-extern char g_bDVTHadError;
-extern char g_bDVTHadWarning;
+char g_bDVTHadError;
+char g_bDVTHadWarning;
 
 /**
  * DVTIsEnabled - 
@@ -76,7 +76,6 @@ static inline char DVTError( void )
 
         if( g_bDVTHadWarning )
                 eprintf( WARNING_PREFIX "occured\n" );
-        
         return g_bDVTHadError;
 }
 

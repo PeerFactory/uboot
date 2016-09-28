@@ -151,4 +151,26 @@ int  spi_xfer(spi_chipsel_type chipsel, int bitlen, uchar *dout, uchar *din)
 	return(0);
 }
 
+struct spi_slave *spi_setup_slave(unsigned int bus, unsigned int cs,
+                                  unsigned int max_hz, unsigned int mode)
+{
+    return NULL;
+}
+
+void spi_free_slave(struct spi_slave *slave)
+{
+        free(slave);
+}
+
+int spi_claim_bus(struct spi_slave *slave)
+{
+        return 0;
+}
+
+void spi_release_bus(struct spi_slave *slave)
+{
+        return;
+}
+
+
 #endif	/* CONFIG_SOFT_SPI */

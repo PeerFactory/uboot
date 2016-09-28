@@ -712,7 +712,7 @@ static void flash_add_byte (flash_info_t * info, cfiword_t * cword, uchar c)
  * Loop through the sector table starting from the previously found sector.
  * Searches forwards or backwards, dependent on the passed address.
  */
-static flash_sect_t find_sector (flash_info_t * info, ulong addr)
+flash_sect_t find_sector (flash_info_t * info, ulong addr)
 {
 	static flash_sect_t saved_sector = 0; /* previously found sector */
 	flash_sect_t sector = saved_sector;

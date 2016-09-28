@@ -150,7 +150,7 @@ typedef	struct environment_s {
 } env_t;
 
 /* Function that returns a character from the environment */
-unsigned char env_get_char (int);
+unsigned char (*env_get_char) (int);
 
 /* Function that returns a pointer to a value from the environment */
 unsigned char *env_get_addr(int);

@@ -203,7 +203,6 @@ LIBS += arch/$(ARCH)/lib/lib$(ARCH).a
 LIBS += fs/cramfs/libcramfs.a fs/fat/libfat.a fs/fdos/libfdos.a fs/jffs2/libjffs2.a \
 	fs/reiserfs/libreiserfs.a fs/ext2/libext2fs.a fs/yaffs2/libyaffs2.a \
 	fs/ubifs/libubifs.a
-LIBS += net/libnet.a
 LIBS += disk/libdisk.a
 LIBS += drivers/bios_emulator/libatibiosemu.a
 LIBS += drivers/block/libblock.a
@@ -220,7 +219,6 @@ LIBS += drivers/mtd/nand/libnand.a
 LIBS += drivers/mtd/onenand/libonenand.a
 LIBS += drivers/mtd/ubi/libubi.a
 LIBS += drivers/mtd/spi/libspi_flash.a
-LIBS += drivers/net/libnet.a
 LIBS += drivers/net/phy/libphy.a
 LIBS += drivers/pci/libpci.a
 ifneq ($(CPU),arm926ejs)
@@ -242,6 +240,7 @@ LIBS += arch/powerpc/cpu/mpc8xxx/ddr/libddr.a
 LIBS += arch/powerpc/cpu/mpc8xxx/lib8xxx.a
 endif
 LIBS += drivers/rtc/librtc.a
+LIBS += net/libnet.a
 LIBS += drivers/serial/libserial.a
 LIBS += drivers/twserial/libtws.a
 LIBS += drivers/usb/gadget/libusb_gadget.a
@@ -252,6 +251,7 @@ LIBS += drivers/video/libvideo.a
 LIBS += drivers/watchdog/libwatchdog.a
 LIBS += common/libcommon.a
 LIBS += common/digi/libdigi.a
+LIBS += arch/arm/lib/libarm.a
 LIBS += lib/libfdt/libfdt.a
 LIBS += api/libapi.a
 LIBS += post/libpost.a
@@ -2131,7 +2131,13 @@ cc9p9215js_dbg_config :	unconfig
 		echo "#define CFG_APPEND_CRC32" >> ./include/config.h; \
 		echo "APPEND_CRC32=y"	>>include/config.mk; \
 		echo "#define CONFIG_NS9215" >> ./include/config.h; \
+		echo "#define CONFIG_DRIVER_NS921X_ETHERNET 1" >> ./include/config.h; \
+		echo "#define CFG_CMD_NET 1" >> ./include/config.h; \
 		echo "#define CONFIG_COMMANDS 1" >> ./include/config.h; \
+		echo "#define CONFIG_RTC_NS921X 1" >> ./include/config.h; \
+		echo "#undef CONFIG_CMD_HWFLOW" >> ./include/config.h; \
+		echo "#undef CONFIG_CMD_ELF" >> ./include/config.h; \
+		echo "#define CFG_CMD_DATE 1" >> ./include/config.h; \
 		echo "#define CFG_CMD_BSP 1" >> ./include/config.h; \
 		echo "#define CONFIG_UBOOT_CMD_BSP_TESTHW" >> ./include/config.h; \
 		echo "#define CONFIG_CC9C" >> ./include/config.h; \

@@ -30,7 +30,7 @@
 #include "cmd_chkimg.h"
 
 /* set from linker file */
-extern const ulong __u_boot_crc32;
+const ulong __u_boot_crc32;
 extern const void* _start;
 
 int CheckCRC32OfImageInFlash( char bSilent )

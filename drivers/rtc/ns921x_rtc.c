@@ -20,7 +20,6 @@
 #include <common.h>
 
 #if defined(CONFIG_RTC_NS921X) && (CONFIG_COMMANDS & CFG_CMD_DATE)
-
 #include <rtc.h>                /* rtc_time */
 #include <bcd.h>                /* bcd2bin */
 

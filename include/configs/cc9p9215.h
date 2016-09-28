@@ -218,6 +218,32 @@
 # define CONFIG_SPLASH_WITH_CONSOLE     1
 #endif  /* CONFIG_UBOOT_SPLASH */
 
+#define CFG_CMD_SPI 1
+#define CONFIG_SOFT_SPI	1	/* Enable SPI driver */
+/* Software (bit-bang) SPI driver configuration */
+# define SPI_TX_GPIO		7
+# define SPI_RX_GPIO		3
+# define SPI_CLK_GPIO		5
+# define SPI_EN_GPIO		0
+
+# define SPI_INIT								\
+{										\
+	gpio_cfg_set(SPI_TX_GPIO, GPIO_CFG_OUTPUT | GPIO_CFG_FUNC_GPIO);	\
+	gpio_cfg_set(SPI_EN_GPIO, GPIO_CFG_OUTPUT | GPIO_CFG_FUNC_GPIO);	\
+	gpio_cfg_set(SPI_CLK_GPIO, GPIO_CFG_OUTPUT | GPIO_CFG_FUNC_GPIO);	\
+	gpio_cfg_set(SPI_RX_GPIO, GPIO_CFG_INPUT | GPIO_CFG_FUNC_GPIO);		\
+	gpio_ctrl_set(SPI_EN_GPIO, 1);						\
+	gpio_ctrl_set(SPI_CLK_GPIO, 1);						\
+}
+
+# define SPI_READ	(gpio_stat_get(SPI_RX_GPIO))
+# define SPI_SDA(bit)	if(bit)  gpio_ctrl_set(SPI_TX_GPIO, 1);		\
+			else     gpio_ctrl_set(SPI_TX_GPIO, 0)
+# define SPI_SCL(bit)	if(bit)  gpio_ctrl_set(SPI_CLK_GPIO, 1);	\
+			else     gpio_ctrl_set(SPI_CLK_GPIO, 0)
+# define SPI_DELAY	udelay(spi_delay)
+
+
 #ifdef CONFIG_UBOOT_CMD_BSP_TESTHW
 # define TEST_HW_EXTRA_CMDS		CFG_CMD_SPI
 #endif
@@ -230,6 +256,7 @@
 	( CONFIG_COMMANDS_DIGI	| \
 	TEST_HW_EXTRA_CMDS	| \
 	CFG_CMD_DATE		| \
+	CFG_CMD_NET		| \
 	CFG_CMD_I2C		| \
 	CFG_CMD_FLASH		| \
 	CFG_CMD_MII		| \

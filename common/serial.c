@@ -318,3 +318,17 @@ void serial_puts (const char *s)
 
 	serial_current->puts (s);
 }
+/* flushes all characters in Tx Queue and returns when completed */
+void serial_tx_flush (void)
+{
+            struct serial_device* dev;
+
+                    dev = ( (!(gd->flags & GD_FLG_RELOC) || !serial_current) ?
+                                            default_serial_console() :
+                                                            serial_current );
+
+                            if( NULL != dev->tx_flush )
+                                                /* has been added only for Digi Drivers */
+                                                dev->tx_flush();
+}
+

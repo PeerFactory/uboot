@@ -25,6 +25,19 @@
 
 #include <common.h>
 
+#if defined(CONFIG_ARM926EJS) || defined(CONFIG_ARM920T)
+# define HAVE_DCACHE
+void dcache_invalidate( void );
+void dcache_flush( void );
+#endif
+
+void  flush_cache_all( void )
+{
+#ifdef HAVE_DCACHE
+        dcache_flush();
+#endif
+}
+
 void  flush_cache (unsigned long dummy1, unsigned long dummy2)
 {
 #ifdef CONFIG_OMAP2420
@@ -32,5 +45,14 @@ void  flush_cache (unsigned long dummy1, unsigned long dummy2)
 
 	arm1136_cache_flush();
 #endif
+
+        flush_cache_all();
 	return;
+}
+
+void  invalidate_cache_all( void )
+{
+#ifdef HAVE_DCACHE
+        dcache_invalidate();
+#endif
 }

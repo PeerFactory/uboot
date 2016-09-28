@@ -24,15 +24,26 @@
  * MA 02111-1307 USA
  */
 
-#define CONFIG_ENV_SIZE 0x10000
-
 #include <common.h>
 #include <command.h>
 #include <environment.h>
 #include <linux/stddef.h>
 #include <malloc.h>
+#include "../common/digi/cmd_nvram/mtd.h"
+
+#ifdef CONFIG_SHOW_BOOT_PROGRESS
+# include <status_led.h>
+# define SHOW_BOOT_PROGRESS(arg)	show_boot_progress(arg)
+#else
+# define SHOW_BOOT_PROGRESS(arg)
+#endif
 
 DECLARE_GLOBAL_DATA_PTR;
+
+#ifdef CONFIG_AMIGAONEG3SE
+	extern void enable_nvram(void);
+	extern void disable_nvram(void);
+#endif
 
 #undef DEBUG_ENV
 #ifdef DEBUG_ENV
@@ -43,10 +54,13 @@ DECLARE_GLOBAL_DATA_PTR;
 
 extern env_t *env_ptr;
 
+size_t nvram_part_size;
+
 extern void env_relocate_spec (void);
 extern uchar env_get_char_spec(int);
 
 static uchar env_get_char_init (int index);
+unsigned char (*env_get_char)(int) = env_get_char_init;
 
 /************************************************************************
  * Default settings to be used when no valid environment is found
@@ -88,20 +102,14 @@ uchar default_environment[] = {
 #ifdef	CONFIG_ETH3ADDR
 	"eth3addr="	MK_STR(CONFIG_ETH3ADDR)		"\0"
 #endif
-#ifdef	CONFIG_ETH4ADDR
-	"eth4addr="	MK_STR(CONFIG_ETH4ADDR)		"\0"
-#endif
-#ifdef	CONFIG_ETH5ADDR
-	"eth5addr="	MK_STR(CONFIG_ETH5ADDR)		"\0"
-#endif
 #ifdef	CONFIG_IPADDR
 	"ipaddr="	MK_STR(CONFIG_IPADDR)		"\0"
 #endif
 #ifdef	CONFIG_SERVERIP
 	"serverip="	MK_STR(CONFIG_SERVERIP)		"\0"
 #endif
-#ifdef	CONFIG_SYS_AUTOLOAD
-	"autoload="	CONFIG_SYS_AUTOLOAD			"\0"
+#ifdef	CFG_AUTOLOAD
+	"autoload="	CFG_AUTOLOAD			"\0"
 #endif
 #ifdef	CONFIG_PREBOOT
 	"preboot="	CONFIG_PREBOOT			"\0"
@@ -119,7 +127,7 @@ uchar default_environment[] = {
 	"hostname="	MK_STR(CONFIG_HOSTNAME)		"\0"
 #endif
 #ifdef	CONFIG_BOOTFILE
-	"bootfile="	MK_STR(CONFIG_BOOTFILE)		"\0"
+	"bootfile="	CONFIG_BOOTFILE			"\0"
 #endif
 #ifdef	CONFIG_LOADADDR
 	"loadaddr="	MK_STR(CONFIG_LOADADDR)		"\0"
@@ -135,6 +143,10 @@ uchar default_environment[] = {
 #endif
 	"\0"
 };
+
+#if defined(CFG_ENV_IS_IN_NAND)		/* Environment is in Nand Flash */
+int default_environment_size = sizeof(default_environment);
+#endif
 
 void env_crc_update (void)
 {
@@ -156,6 +168,20 @@ static uchar env_get_char_init (int index)
 	return (c);
 }
 
+#ifdef CONFIG_AMIGAONEG3SE
+uchar env_get_char_memory (int index)
+{
+	uchar retval;
+	enable_nvram();
+	if (gd->env_valid) {
+		retval = ( *((uchar *)(gd->env_addr + index)) );
+	} else {
+		retval = ( default_environment[index] );
+	}
+	disable_nvram();
+	return retval;
+}
+#else
 uchar env_get_char_memory (int index)
 {
 	if (gd->env_valid) {
@@ -164,19 +190,7 @@ uchar env_get_char_memory (int index)
 		return ( default_environment[index] );
 	}
 }
-
-uchar env_get_char (int index)
-{
-	uchar c;
-
-	/* if relocated to RAM */
-	if (gd->flags & GD_FLG_RELOC)
-		c = env_get_char_memory(index);
-	else
-		c = env_get_char_init(index);
-
-	return (c);
-}
+#endif
 
 uchar *env_get_addr (int index)
 {
@@ -187,28 +201,27 @@ uchar *env_get_addr (int index)
 	}
 }
 
-void set_default_env(void)
-{
-	if (sizeof(default_environment) > ENV_SIZE) {
-		puts ("*** Error - default environment is too large\n\n");
-		return;
-	}
-
-	memset(env_ptr, 0, sizeof(env_t));
-	memcpy(env_ptr->data, default_environment,
-	       sizeof(default_environment));
-#ifdef CONFIG_SYS_REDUNDAND_ENVIRONMENT
-	env_ptr->flags = 0xFF;
-#endif
-	env_crc_update ();
-	gd->env_valid = 1;
-}
-
 void env_relocate (void)
 {
-#ifndef CONFIG_RELOC_FIXUP_WORKS
 	DEBUGF ("%s[%d] offset = 0x%lx\n", __FUNCTION__,__LINE__,
 		gd->reloc_off);
+
+	/* Dynamic calculation of NVRAM partition size. */
+	nvram_part_size = MtdGetEraseSize(0, PART_UBOOT_SIZE);
+	while (nvram_part_size < CFG_ENV_SIZE)
+		nvram_part_size += MtdGetEraseSize(0, PART_UBOOT_SIZE + nvram_part_size);
+	
+	/* space for NVRAM backup */
+	nvram_part_size += MtdGetEraseSize(0, PART_UBOOT_SIZE + nvram_part_size);
+	while (nvram_part_size < 2 * CFG_ENV_SIZE)
+		nvram_part_size += MtdGetEraseSize(0, PART_UBOOT_SIZE + nvram_part_size);
+
+#if (CONFIG_COMMANDS & CFG_CMD_NAND) 
+	/* double NVRAM partition size to handle bad blcoks */
+	nvram_part_size += nvram_part_size;
+#endif
+#ifdef CONFIG_AMIGAONEG3SE
+	enable_nvram();
 #endif
 
 #ifdef ENV_IS_EMBEDDED
@@ -216,31 +229,53 @@ void env_relocate (void)
 	 * The environment buffer is embedded with the text segment,
 	 * just relocate the environment pointer
 	 */
-#ifndef CONFIG_RELOC_FIXUP_WORKS
 	env_ptr = (env_t *)((ulong)env_ptr + gd->reloc_off);
-#endif
 	DEBUGF ("%s[%d] embedded ENV at %p\n", __FUNCTION__,__LINE__,env_ptr);
 #else
 	/*
 	 * We must allocate a buffer for the environment
 	 */
-	env_ptr = (env_t *)malloc (CONFIG_ENV_SIZE);
+	env_ptr = (env_t *)malloc (CFG_ENV_SIZE);
 	DEBUGF ("%s[%d] malloced ENV at %p\n", __FUNCTION__,__LINE__,env_ptr);
 #endif
 
+	/*
+	 * After relocation to RAM, we can always use the "memory" functions
+	 */
+	env_get_char = env_get_char_memory;
+
 	if (gd->env_valid == 0) {
-#if defined(CONFIG_ENV_IS_NOWHERE)	/* Environment not changable */
+#if defined(CONFIG_GTH)	|| defined(CFG_ENV_IS_NOWHERE)	/* Environment not changable */
 		puts ("Using default environment\n\n");
 #else
 		puts ("*** Warning - bad CRC, using default environment\n\n");
-		show_boot_progress (-60);
+		SHOW_BOOT_PROGRESS (-1);
 #endif
-		set_default_env();
+
+		if (sizeof(default_environment) > ENV_SIZE)
+		{
+			puts ("*** Error - default environment is too large\n\n");
+			return;
+		}
+
+		memset (env_ptr, 0, sizeof(env_t));
+		memcpy (env_ptr->data,
+			default_environment,
+			sizeof(default_environment));
+#ifdef CFG_REDUNDAND_ENVIRONMENT
+		env_ptr->flags = 0xFF;
+#endif
+		env_crc_update ();
+		gd->env_valid = 1;
 	}
 	else {
 		env_relocate_spec ();
 	}
 	gd->env_addr = (ulong)&(env_ptr->data);
+
+#ifdef CONFIG_AMIGAONEG3SE
+	disable_nvram();
+#endif
 }
 
 #ifdef CONFIG_AUTO_COMPLETE
