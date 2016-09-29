@@ -37,7 +37,7 @@
 
 #if (CONFIG_COMMANDS & CFG_CMD_BSP) &&         \
     defined(CONFIG_UBOOT_CMD_BSP_TESTHW) && \
-    defined(CONFIG_DVT_PROVIDED)
+    defined(CONFIG_DVT_PROVIDED) && !defined(CONFIG_NS9215)
 
 #define DVTPrintOnlyOnce( ... )       \
         {                                       \
