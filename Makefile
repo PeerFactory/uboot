@@ -142,10 +142,6 @@ SUBDIRS	= tools \
 
 .PHONY : $(SUBDIRS)
 
-ifneq ($(obj)include/config.mk,$(wildcard $(obj)include/config.mk))
-@echo "config.mk does not match wildard"
-endif
-
 ifeq ($(obj)include/config.mk,$(wildcard $(obj)include/config.mk))
 
 # Include autoconf.mk before config.mk so that the config options are available
